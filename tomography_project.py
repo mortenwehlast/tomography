@@ -60,5 +60,14 @@ dist2    = n_rays2 - 1
 # Resize slices from NxN to LxL
 A_1a, A_1b, A_2a, A_2b = deltaL * A_1a, deltaL * A_1b, 2*deltaL * A_2a, 2*deltaL * A_2b
 
+# Calculate Condition numbers
+cond_A_1a = np.linalg.cond(A_1a)
+cond_A_1b = np.linalg.cond(A_1b)
+cond_A_2a = np.linalg.cond(A_2a)
+cond_A_2b = np.linalg.cond(A_2b)
 
-
+# Calculate rank of matrices
+rank_A_1a = np.linalg.matrix_rank(A_1a)
+rank_A_1b = np.linalg.matrix_rank(A_1b)
+rank_A_2a = np.linalg.matrix_rank(A_2a)
+rank_A_2b = np.linalg.matrix_rank(A_2b)

@@ -35,16 +35,16 @@ deltaL = L/N
 
 
 # Configuration 1a and 1b
-theta1_a = np.asarray(np.arange(1.5, 97.5, 1.5)).T
-theta1_b = np.asarray(np.arange(2.5, 162.5, 2.5)).T
+theta1_a = np.asarray(np.arange(1.5, 97.5, 1.5))
+theta1_b = np.asarray(np.arange(2.5, 162.5, 2.5))
 n_rays1  = int(N)
-dist1    = deltaL * (N - 1)
+dist1    = n_rays1 - 1
 
 # Configuration 2a and 2b
-theta2_a = np.asarray(np.arange(0.75, 96.75, 0.75)).T
-theta2_b = np.asarray(np.arange(1.25, 161.25, 1.25)).T
+theta2_a = np.asarray(np.arange(0.75, 96.75, 0.75))
+theta2_b = np.asarray(np.arange(1.25, 161.25, 1.25))
 n_rays2  = int(np.floor(N/2))
-dist2    = 2*deltaL * (N - 1)
+dist2    = n_rays2 - 1
 
 
 ### Calculate A

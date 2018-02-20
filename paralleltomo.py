@@ -64,7 +64,7 @@ def paralleltomo(*args):
 
 
     # Define the number of angles.
-    nA = theta.shape[1]
+    nA = theta.shape[0]
 
     # The starting values both the x and the y coordinates. 
     x0 = np.matrix(np.linspace(-d/2,d/2,p)).T
@@ -86,13 +86,13 @@ def paralleltomo(*args):
     for i in range(0,nA):
                 
         # All the starting points for the current angle.
-        x0theta = np.cos(np.deg2rad(theta[0,i]))*x0-np.sin(np.deg2rad(theta[0,i]))*y0
-        y0theta = np.sin(np.deg2rad(theta[0,i]))*x0+np.cos(np.deg2rad(theta[0,i]))*y0
+        x0theta = np.cos(np.deg2rad(theta[i]))*x0-np.sin(np.deg2rad(theta[i]))*y0
+        y0theta = np.sin(np.deg2rad(theta[i]))*x0+np.cos(np.deg2rad(theta[i]))*y0
         
         # The direction vector for all the rays corresponding to the current 
         # angle.
-        a = -np.sin(np.deg2rad(theta[0,i]))
-        b = np.cos(np.deg2rad(theta[0,i]))
+        a = -np.sin(np.deg2rad(theta[i]))
+        b = np.cos(np.deg2rad(theta[i]))
         
         # Loop over the rays.
         for j in range(0,p):

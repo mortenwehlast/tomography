@@ -91,13 +91,13 @@ matrices = [A_1a, A_1b, A_2b]
 cond_num = [cond_A_1a, cond_A_1b, cond_A_2b]
 
 # Pre-calculate inverse of matrices
-matrices_inv = np.linalg.inv(matrices)
+matrices_inv = [np.linalg.inv(A_1a), np.linalg.inv(A_1b), np.linalg.inv(A_2b)]
 
 
 # Allocate memory for relative error measurements and noise
 # 10 tests, 6 noise levels (magnitude of 10 between steps)
 n_matrix = len(matrices)
-n_levels = 6
+n_levels = 10
 n_tests = 10
 rel_error_mat = np.zeros([n_matrix, n_levels])
 max_error_mat = np.zeros([n_matrix, n_levels])
@@ -108,8 +108,12 @@ max_error_mat = np.zeros([n_matrix, n_levels])
 np.random.seed(146782)
 noise_mat = np.zeros([4096,n_tests,n_levels])
 
+# Noise levels (for plot)
+noise_levels = np.zeros([n_levels, 1])
+
 for i in range(0, n_levels):
-    noiselevel = 10**(-(i+1))
+    noiselevel = 10**(-(i))
+    noise_levels[i] = noiselevel
     
     for j in range(0, n_tests):
         noise_mat[:,j,i] = (noiselevel*np.random.normal(0,1,b.shape)).squeeze()
@@ -144,10 +148,41 @@ for i in range(0, n_levels):
         
 
 
+### Plots
+
+# Logarithmic scaling of noise levels
+log_noise = np.log10(noise_levels)
+log_error = np.log10(rel_error_mat)
+
+# Relative error as function of noise level
+plt.figure(1)
+plt.plot(log_noise, log_error[0,:], 'r*-', label = 'Configuration 1a')
+plt.plot(log_noise, log_error[1,:], 'b^-', label = 'Configuration 1b')
+plt.plot(log_noise, log_error[2,:], 'gs-', label = 'Configuration 2b')
+plt.legend(loc = 'upper left')
+plt.title('Relative error as a function of noise magnitude')
+plt.xlabel('Noise level (log10)')
+plt.ylabel('Relative error (log10)')
+plt.show()
+
+# Shepp logan reconstruction for 3 levels (10^(-6), 10^(-5), 10^(-4))
+# Chosen based on graph from before
+
+plot_num = 1
+fig = plt.figure()
+for i in range(0,3):
+    for j in range(0,3):
+        mat = j
+        b = np.dot(matrices[mat], x)
+        btilde = b.squeeze() + noise_mat[:,0, 5 + i]
+        xtilde = np.dot(matrices_inv[mat], btilde)
+        plt.subplot(3,3, plot_num)
+        plt.imshow(np.reshape(xtilde, (N, N)))
+        plt.axis('off')
+        plot_num += 1
+plt.show()
 
 
 # Plot the reconstruction
 plt.imshow(np.reshape(xtilde, (N, N)))
 
-
-### Numerical experiments

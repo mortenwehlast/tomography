@@ -79,6 +79,7 @@ rank_A_2b = np.linalg.matrix_rank(A_2b)
 # Create shepp logan phantom
 X = phantom.shepp2d(N)
 x = np.reshape(X, (N*N, 1))
+A = A_1b
 b = np.dot(A,x)
 
 # Numerical experiments

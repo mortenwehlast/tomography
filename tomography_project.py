@@ -80,6 +80,10 @@ rank_A_2b = np.linalg.matrix_rank(A_2b)
 X = phantom.shepp2d(N)
 x = np.reshape(X, (N*N, 1))
 
+# Create b for dimensions in noise creation. Pick whichever matrix
+A = A_1a
+b = np.dot(A,x)
+
 
 # Numerical experiments
 # Create matrix with matrices with full rank + condition numbers
@@ -138,22 +142,6 @@ for i in range(0, n_levels):
         rel_error_mat[j,i] = np.mean(errors)
 
         
-
-#for i in range(0, n_matrix):
-#    # Assign matrix to be tested
-#    A = matrices[i]
-#    b = np.dot(A,x)
-#    kappa = np.linalg.cond(A)
-#    
-#    for j in range(0, n_levels):
-#        noiselevel = 10**(-(j+1))
-#        print(noiselevel)
-#        btilde = b + noiselevel*np.random.normal(0,1,b.shape)
-#        xtilde = np.linalg.solve(A, btilde)
-#        
-#        # add relative error and max possible error to matrices
-#        max_error_mat[i,j] = kappa*np.linalg.norm(b-btilde)/np.linalg.norm(b)
-#        rel_error_mat[i,j] = np.linalg.norm(x-xtilde)/np.linalg.norm(x)
 
 
 

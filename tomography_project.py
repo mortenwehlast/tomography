@@ -79,8 +79,7 @@ rank_A_2b = np.linalg.matrix_rank(A_2b)
 # Create shepp logan phantom
 X = phantom.shepp2d(N)
 x = np.reshape(X, (N*N, 1))
-A = A_1b
-b = np.dot(A,x)
+
 
 # Numerical experiments
 # Create matrix with matrices with full rank + condition numbers
@@ -102,7 +101,7 @@ max_error_mat = np.zeros([n_matrix, n_levels])
 
 # Create noise for matrices
 # Set seed
-np.random.seed(142)
+np.random.seed(146782)
 noise_mat = np.zeros([4096,n_tests,n_levels])
 
 for i in range(0, n_levels):
@@ -119,16 +118,18 @@ for i in range(0, n_levels):
     
     #Loop over matrices
     for j in range(0, n_matrix):
+        print(j,i)
         A           = matrices[j]
         A_inv       = matrices_inv[j]
         b           = np.dot(A,x)
         kappa       = cond_num[j]
         errors      = np.zeros([n_tests, 1])
         upper_bound = np.zeros([n_tests, 1])
+        print(b.shape, noise_mat[:,2,i].shape)
         
         # Calc errors for each noise vector at level i
         for k in range(0, n_tests):
-            btilde         = b + noise_mat[:,k,i]
+            btilde         = b.squeeze() + noise_mat[:,k,i]
             xtilde         = np.dot(A_inv, btilde)
             errors[k]      = np.linalg.norm(x-xtilde)/np.linalg.norm(x)
             #upper_bound[k] = kappa*np.linalg.norm(b-btilde)/np.linalg.norm(b)

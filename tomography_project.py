@@ -3,7 +3,7 @@
 """
 Created on Tue Feb 20 09:41:52 2018
 
-@author: Morten
+@author: Morten Wehlast Jørgensen, Allan Erlang Videbæk and Simon Tommerup
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -97,10 +97,9 @@ matrices_inv = [np.linalg.inv(A_1a), np.linalg.inv(A_1b), np.linalg.inv(A_2b)]
 # Allocate memory for relative error measurements and noise
 # 10 tests, 6 noise levels (magnitude of 10 between steps)
 n_matrix = len(matrices)
-n_levels = 10
+n_levels = 8
 n_tests = 10
 rel_error_mat = np.zeros([n_matrix, n_levels])
-max_error_mat = np.zeros([n_matrix, n_levels])
 
 
 # Create noise for matrices
@@ -140,9 +139,7 @@ for i in range(0, n_levels):
             btilde         = b.squeeze() + noise_mat[:,k,i]
             xtilde         = np.dot(A_inv, btilde)
             errors[k]      = np.linalg.norm(x-xtilde)/np.linalg.norm(x)
-            #upper_bound[k] = kappa*np.linalg.norm(b-btilde)/np.linalg.norm(b)
-            
-        #max_error_mat[j,i] = np.mean(upper_bound)
+
         rel_error_mat[j,i] = np.mean(errors)
 
         
@@ -165,24 +162,33 @@ plt.xlabel('Noise level (log10)')
 plt.ylabel('Relative error (log10)')
 plt.show()
 
+
 # Shepp logan reconstruction for 3 levels (10^(-6), 10^(-5), 10^(-4))
 # Chosen based on graph from before
 
-plot_num = 1
-fig = plt.figure()
+cols = ['Configuration {}'.format(col) for col in ['1_a','1_b','2_b']]
+rows = ['Row '.format(row) for row in ['10^(-4)', '10^(-5)','10^(-6)']]
+
+fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(12, 8))
+
+for ax, col in zip(axes[0], cols):
+    ax.set_title(col)
+
+for ax, row in zip(axes[:,0], rows):
+    ax.set_ylabel(row, rotation=0, size='large')
+
 for i in range(0,3):
     for j in range(0,3):
         mat = j
         b = np.dot(matrices[mat], x)
         btilde = b.squeeze() + noise_mat[:,0, 5 + i]
         xtilde = np.dot(matrices_inv[mat], btilde)
-        plt.subplot(3,3, plot_num)
-        plt.imshow(np.reshape(xtilde, (N, N)))
-        plt.axis('off')
-        plot_num += 1
+        plt.figure()
+        axes[i,j].imshow(np.reshape(xtilde, (N, N)))
+        axes[i,j].axis('off')
+
+fig.tight_layout()
 plt.show()
 
 
-# Plot the reconstruction
-plt.imshow(np.reshape(xtilde, (N, N)))
 
